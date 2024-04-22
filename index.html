@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timer</title>
+<style>
+    .container {
+        text-align: center;
+        margin-top: 50px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Timer</h2>
+    <div id="timer">00:00:00</div>
+    <label for="hours">Hours:</label>
+    <input type="number" id="hours" min="0" value="0">
+    <label for="minutes">Minutes:</label>
+    <input type="number" id="minutes" min="0" value="0">
+    <label for="seconds">Seconds:</label>
+    <input type="number" id="seconds" min="0" value="0">
+    <br><br>
+    <button onclick="startTimer()">Start</button>
+    <button onclick="pauseTimer()">Pause</button>
+    <button onclick="resetTimer()">Reset</button>
+</div>
+
+<script>
+    let timer;
+    let totalSeconds;
+    let remainingSeconds;
+    let isRunning = false;
+
+    function startTimer() {
+        if (!isRunning) {
+            const hours = parseInt(document.getElementById("hours").value) || 0;
+            const minutes = parseInt(document.getElementById("minutes").value) || 0;
+            const seconds = parseInt(document.getElementById("seconds").value) || 0;
+            totalSeconds = hours * 3600 + minutes * 60 + seconds;
+            remainingSeconds = totalSeconds;
+
+            if (totalSeconds > 0) {
+                isRunning = true;
+                timer = setTimeout(updateTimer, 1000);
+            } else {
+                alert("Please enter a valid time.");
+            }
+        }
+    }
+
+    function pauseTimer() {
+        if (isRunning) {
+            clearTimeout(timer);
+            isRunning = false;
+        }
+    }
+
+    function resetTimer() {
+        clearTimeout(timer);
+        isRunning = false;
+        document.getElementById("hours").value = 0;
+        document.getElementById("minutes").value = 0;
+        document.getElementById("seconds").value = 0;
+        document.getElementById("timer").innerText = "00:00:00";
+    }
+
+    function updateTimer() {
+        remainingSeconds--;
+
+        if (remainingSeconds >= 0) {
+            const hours = Math.floor(remainingSeconds / 3600);
+            const minutes = Math.floor((remainingSeconds % 3600) / 60);
+            const seconds = remainingSeconds % 60;
+
+            const displayString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById("timer").innerText = displayString;
+
+            timer = setTimeout(updateTimer, 1000);
+        } else {
+            alert("Timer finished!");
+            resetTimer();
+        }
+    }
+</script>
+
+</body>
+</html>
